@@ -1,4 +1,4 @@
-type Tile = Simple | Honor | Bonus;
+export type Tile = Simple | Honor | Bonus;
 
 interface Simple {
   rank: Rank;
@@ -25,7 +25,7 @@ type Flower = 'plum' | 'orchid' | 'chrysanthemum' | 'bamboo';
 
 type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 
-type Meld = Sequence | Quad | Triple | Pair | Tile;
+export type Meld = Sequence | Quad | Triple | Pair | Tile;
 
 interface Sequence {
   high: Rank;
@@ -42,13 +42,6 @@ interface Triple {
 
 interface Pair {
   tile: Tile;
-}
-
-type Wall = Tile[];
-
-interface Hand {
-  concealed: Tile[];
-  exposed: Meld[];
 }
 
 interface TilesetOptions {
