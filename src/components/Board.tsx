@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import { Seat } from './Seat';
+import { BoardSeat } from './BoardSeat';
 import { generateTileset } from '../rules/tiles';
 import { deal, Subround, Player } from '../rules/deal';
 
 const Board: React.FunctionComponent = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [subround, setSubround] = useState<Subround>({
-    discardPiles: [],
-    hands: [],
+    playerToAct: 0,
+    seats: [],
     wall: [],
   });
 
@@ -25,12 +25,12 @@ const Board: React.FunctionComponent = () => {
   return (
     <div>
       {players.map(player => (
-        <Seat
-          discardPile={subround.discardPiles[player.id]}
-          hand={subround.hands[player.id]}
+        <BoardSeat
+          seat={subround.seats[player.id]}
           player={player}
         />
       ))}
+      <div>Tiles left: {subround.wall.length}</div>
       {subround.wall.map(() => 'X')}
     </div>
   );

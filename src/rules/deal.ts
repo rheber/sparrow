@@ -7,32 +7,23 @@ export interface Hand {
 
 export type DiscardPile = Tile[];
 
+export interface Seat {
+  discardPile: DiscardPile;
+  hand: Hand;
+}
+
+type SeatNumber = 0 | 1 | 2 | 3;
+
 export interface Player {
   name: string;
-  id: number;
+  id: SeatNumber;
 }
 
 export interface Subround {
-  discardPiles: DiscardPile[];
-  hands: Hand[];
+  playerToAct: SeatNumber;
+  seats: Seat[];
   wall: Tile[];
 }
-
-/*
-interface Match {
-  players: Player[];
-  subround: Subround;
-}
-
-const match: Match = {
-  players: [],
-  subround: {
-    discardPiles: [],
-    hands: [],
-    wall: [],
-  },
-};
-*/
 
 const deal = (tileset: Tile[]): Subround => {
   // Fisher-Yates in-place. https://stackoverflow.com/a/6274381
@@ -68,8 +59,25 @@ const deal = (tileset: Tile[]): Subround => {
     exposed: [],
   }
   return {
-    discardPiles: [[], [], [], []],
-    hands: [hand1, hand2, hand3, hand4],
+    playerToAct: 0,
+    seats: [
+      {
+        discardPile: [],
+        hand: hand1,
+      },
+      {
+        discardPile: [],
+        hand: hand2,
+      },
+      {
+        discardPile: [],
+        hand: hand3,
+      },
+      {
+        discardPile: [],
+        hand: hand4,
+      },
+    ],
     wall: tiles,
   };
 }
