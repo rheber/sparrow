@@ -1,14 +1,15 @@
 import {Tile, Meld} from "./tiles";
 
-interface Hand {
+export interface Hand {
   concealed: Tile[];
   exposed: Meld[];
 }
 
-type DiscardPile = Tile[];
+export type DiscardPile = Tile[];
 
-interface Player {
+export interface Player {
   name: string;
+  id: number;
 }
 
 export interface Subround {
