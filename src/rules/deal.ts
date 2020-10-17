@@ -82,4 +82,10 @@ const deal = (tileset: Tile[]): Subround => {
   };
 }
 
-export { deal };
+const draw = (subround: Subround) => {
+  const drawnTile = subround.wall[0];
+  subround.wall.shift();
+  subround.seats[subround.playerToAct].hand.concealed.push(drawnTile);
+}
+
+export { deal, draw };

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { BoardSeat } from './BoardSeat';
 import { generateTileset } from '../rules/tiles';
-import { deal, Subround, Player } from '../rules/deal';
+import { deal, Subround, Player, draw } from '../rules/deal';
 
 const Board: React.FunctionComponent = () => {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -13,13 +13,15 @@ const Board: React.FunctionComponent = () => {
 
   useEffect(() => {
     const tiles = generateTileset({ includeBonus: false });
-    setSubround(deal(tiles));
+    const newSubround = deal(tiles);
     setPlayers([
       { id: 0, name: 'Inky' },
       { id: 1, name: 'Blinky' },
       { id: 2, name: 'Pinky' },
       { id: 3, name: 'Clyde' }
     ]);
+    draw(newSubround);
+    setSubround(newSubround);
   }, []);
 
   return (
