@@ -25,6 +25,17 @@ type Flower = 'plum' | 'orchid' | 'chrysanthemum' | 'bamboo';
 
 type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 
+const isSimple = (tile: Tile): tile is Simple => {
+  return (tile as Simple).suit !== undefined;
+};
+
+const tileName = (tile: Tile): string => {
+  if (isSimple(tile)) {
+    return `${tile.suit} ${tile.rank}`;
+  }
+  return tile.value;
+};
+
 export type Meld = Sequence | Quad | Triple | Pair | Tile;
 
 interface Sequence {
@@ -122,4 +133,4 @@ const generateTileset = (options: TilesetOptions): Tile[] => {
   return standardTileset;
 }
 
-export { generateTileset };
+export { generateTileset, tileName };

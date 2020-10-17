@@ -11,12 +11,13 @@ interface Player {
   name: string;
 }
 
-interface Subround {
+export interface Subround {
   discardPiles: DiscardPile[];
   hands: Hand[];
   wall: Tile[];
 }
 
+/*
 interface Match {
   players: Player[];
   subround: Subround;
@@ -30,6 +31,7 @@ const match: Match = {
     wall: [],
   },
 };
+*/
 
 const deal = (tileset: Tile[]): Subround => {
   // Fisher-Yates in-place. https://stackoverflow.com/a/6274381

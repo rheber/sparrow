@@ -1,10 +1,9 @@
 import React from 'react';
+import { Board } from './components/Board';
 
 const App: React.FunctionComponent = () => {
   return (
-    <div>
-      Hello world!
-    </div>
+    <Board />
   );
 };
 
