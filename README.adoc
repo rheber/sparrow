@@ -1,0 +1,9 @@
+= Sparrow
+
+== Development
+
+Execute `yarn install` to install dependencies.
+
+Execute `yarn start` to run the project.
+
+Execute `yarn test` to start the test runner.
