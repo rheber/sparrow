@@ -1,5 +1,5 @@
 import {generateTileset} from "./tiles";
-import {deal, draw} from "./deal";
+import {deal, draw, Subround, EmptyWall} from "./deal";
 
 describe("Dealing logic", () => {
   it("deals every tile to either the wall or the hands", () => {
@@ -30,5 +30,16 @@ describe("Dealing logic", () => {
     expect(
       subround.seats[subround.playerToAct].hand.concealed
     ).toHaveLength(handSizeBeforeDraw + 1);
+  });
+
+  it("cannot draw from empty wall", () => {
+    const subround: Subround = {
+      playerToAct: 0,
+      seats: [],
+      wall: [],
+    };
+    expect(() => {
+      draw(subround);
+    }).toThrow(EmptyWall);
   });
 });

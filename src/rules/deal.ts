@@ -1,5 +1,7 @@
 import {Tile, Meld} from "./tiles";
 
+class EmptyWall extends Error {};
+
 export interface Hand {
   concealed: Tile[];
   exposed: Meld[];
@@ -78,9 +80,12 @@ const deal = (tileset: Tile[]): Subround => {
 }
 
 const draw = (subround: Subround) => {
+  if (subround.wall.length < 1) {
+    throw new EmptyWall();
+  }
   const drawnTile = subround.wall[0];
   subround.wall.shift();
   subround.seats[subround.playerToAct].hand.concealed.push(drawnTile);
 }
 
-export { deal, draw };
+export { deal, draw, EmptyWall };
