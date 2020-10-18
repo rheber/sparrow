@@ -1,5 +1,5 @@
 import React from 'react';
-import {Tile, tileName} from '../rules/tiles';
+import {Tile, tileName} from '../rules/tile';
 
 const AsciiTile: React.FunctionComponent<{
   tile: Tile,

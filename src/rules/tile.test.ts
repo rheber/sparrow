@@ -1,4 +1,4 @@
-import {generateTileset} from "./tiles";
+import {generateTileset} from "./tile";
 
 describe("Tileset logic", () => {
   it("generates 136 tiles excluding bonuses", () => {

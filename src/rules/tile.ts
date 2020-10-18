@@ -13,9 +13,9 @@ interface Bonus {
   value: Flower | Season;
 }
 
-type Rank = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type Rank = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-type Suit = 'bam' | 'dot' | 'crc';
+export type Suit = 'bam' | 'dot' | 'crc';
 
 type Dragon = 'green' | 'red' | 'white';
 
@@ -35,25 +35,6 @@ const tileName = (tile: Tile): string => {
   }
   return tile.value;
 };
-
-export type Meld = Sequence | Quad | Triple | Pair | Tile;
-
-interface Sequence {
-  high: Rank;
-  suit: Suit;
-}
-
-interface Quad {
-  tile: Tile;
-}
-
-interface Triple {
-  tile: Tile;
-}
-
-interface Pair {
-  tile: Tile;
-}
 
 interface TilesetOptions {
   includeBonus: boolean;

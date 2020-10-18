@@ -1,4 +1,4 @@
-import { SeatNumber } from './deal';
+import { SeatNumber } from './subround';
 
 export interface Player {
   name: string;

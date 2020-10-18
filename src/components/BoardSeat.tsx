@@ -1,5 +1,5 @@
 import React from 'react';
-import {Seat} from '../rules/deal';
+import {Seat} from '../rules/subround';
 import {AsciiTile} from './AsciiTile';
 import {Player} from '../rules/player';
 
