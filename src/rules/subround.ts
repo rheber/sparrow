@@ -1,24 +1,42 @@
 import {Tile, generateTileset, Rank, Suit} from "./tile";
 
 class EmptyWall extends Error {};
+class Impossibility extends Error {};
 
 type Meld = Sequence | Quad | Triple | Pair | Tile;
 
-interface Sequence {
+class Sequence {
   high: Rank;
   suit: Suit;
+
+  constructor(high: Rank, suit: Suit) {
+    this.high = high;
+    this.suit = suit;
+  }
 }
 
-interface Quad {
+class Quad {
   tile: Tile;
+
+  constructor(tile: Tile) {
+    this.tile = tile;
+  }
 }
 
-interface Triple {
+class Triple {
   tile: Tile;
+
+  constructor(tile: Tile) {
+    this.tile = tile;
+  }
 }
 
-interface Pair {
+class Pair {
   tile: Tile;
+
+  constructor(tile: Tile) {
+    this.tile = tile;
+  }
 }
 
 export interface Hand {
@@ -101,6 +119,19 @@ class Subround {
   noClaim = () => {
     this.playerToAct = ((this.playerToAct + 1) % 4) as SeatNumber;
   };
+
+  claimTriple = (claimant: SeatNumber) => {
+    const lastDiscard = this.seatToAct().discardPile.pop();
+    if (!lastDiscard) {
+      throw new Impossibility();
+    }
+    this.playerToAct = claimant;
+    const idxFirstMatch = this.seatToAct().hand.concealed.indexOf(lastDiscard);
+    this.seatToAct().hand.concealed.splice(idxFirstMatch, 1);
+    const idxSecondMatch = this.seatToAct().hand.concealed.indexOf(lastDiscard);
+    this.seatToAct().hand.concealed.splice(idxSecondMatch, 1);
+    this.seatToAct().hand.exposed.push(new Triple(lastDiscard));
+  }
 
   seatToAct = (): Seat => {
     return this.seats[this.playerToAct];
