@@ -46,6 +46,23 @@ describe("Subround logic", () => {
     ).toHaveLength(discardPileSizeBeforeDiscard + 1);
   });
 
+  it("changes the player to act after no claim", () => {
+    const subround = new Subround();
+    const playerToActBeforeNoClaim = subround.playerToAct;
+    subround.noClaim();
+    expect(subround.playerToAct).not.toEqual(playerToActBeforeNoClaim);
+  });
+
+  it("reverts to the original player to act after four consecutive no-claims", () => {
+    const subround = new Subround();
+    const playerToActBeforeNoClaim = subround.playerToAct;
+    subround.noClaim();
+    subround.noClaim();
+    subround.noClaim();
+    subround.noClaim();
+    expect(subround.playerToAct).toEqual(playerToActBeforeNoClaim);
+  });
+
   it("cannot draw from empty wall", () => {
     const subround = new Subround();
     subround.wall = [];

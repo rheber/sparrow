@@ -98,6 +98,10 @@ class Subround {
     this.seatToAct().discardPile.push(tileToDiscard);
   }
 
+  noClaim = () => {
+    this.playerToAct = ((this.playerToAct + 1) % 4) as SeatNumber;
+  };
+
   seatToAct = (): Seat => {
     return this.seats[this.playerToAct];
   };
