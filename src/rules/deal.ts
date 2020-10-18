@@ -12,12 +12,7 @@ export interface Seat {
   hand: Hand;
 }
 
-type SeatNumber = 0 | 1 | 2 | 3;
-
-export interface Player {
-  name: string;
-  id: SeatNumber;
-}
+export type SeatNumber = 0 | 1 | 2 | 3;
 
 export interface Subround {
   playerToAct: SeatNumber;

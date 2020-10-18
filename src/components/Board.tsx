@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import { BoardSeat } from './BoardSeat';
 import { generateTileset } from '../rules/tiles';
-import { deal, Subround, Player, draw } from '../rules/deal';
+import { deal, Subround, draw } from '../rules/deal';
+import { Player, GreedyAiPlayer } from '../rules/player';
 
 const Board: React.FunctionComponent = () => {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -15,10 +16,10 @@ const Board: React.FunctionComponent = () => {
     const tiles = generateTileset({ includeBonus: false });
     const newSubround = deal(tiles);
     setPlayers([
-      { id: 0, name: 'Inky' },
-      { id: 1, name: 'Blinky' },
-      { id: 2, name: 'Pinky' },
-      { id: 3, name: 'Clyde' }
+      new GreedyAiPlayer('Inky', 0),
+      new GreedyAiPlayer('Blinky', 1),
+      new GreedyAiPlayer('Pinky', 2),
+      new GreedyAiPlayer('Clyde', 3),
     ]);
     draw(newSubround);
     setSubround(newSubround);

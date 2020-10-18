@@ -1,6 +1,7 @@
 import React from 'react';
-import {Player, Seat} from '../rules/deal';
+import {Seat} from '../rules/deal';
 import {AsciiTile} from './AsciiTile';
+import {Player} from '../rules/player';
 
 const BoardSeat: React.FunctionComponent<{
   seat: Seat,
