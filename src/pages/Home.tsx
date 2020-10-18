@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import { TileFace } from '../components/TileFace';
 
 const Home: React.FunctionComponent = () => {
   return (
@@ -11,7 +10,6 @@ const Home: React.FunctionComponent = () => {
       <div>
         Tile images by <a href='https://github.com/FluffyStuff/riichi-mahjong-tiles'>FluffyStuff</a> used under <a href='http://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International License</a>.
       </div>
-      <TileFace />
     </div>
   );
 };
