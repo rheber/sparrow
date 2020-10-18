@@ -1,15 +1,18 @@
 import React from 'react';
-import { TileFace } from './TileFace';
+import { TileFace, Props } from './TileFace';
 
 export default {
   component: TileFace,
   title: 'TileFace',
 };
 
-const Back = () => <TileFace concealed />;
-const East = () => <TileFace concealed={false} />;
+const Template = (args: Props) => <TileFace {...args} />;
+
+const Default = Template.bind({});
+Default.args = {
+  concealed: false,
+};
 
 export {
-  Back,
-  East,
+  Default,
 };
