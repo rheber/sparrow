@@ -5,10 +5,10 @@ describe("Subround logic", () => {
     const subround = new Subround();
     const amtTilesAfterDeal =
       subround.wall.length +
-      subround.seats[0].hand.concealed.length +
-      subround.seats[1].hand.concealed.length +
-      subround.seats[2].hand.concealed.length +
-      subround.seats[3].hand.concealed.length;
+      subround.seats[0].hand.loose.length +
+      subround.seats[1].hand.loose.length +
+      subround.seats[2].hand.loose.length +
+      subround.seats[3].hand.loose.length;
     expect(amtTilesAfterDeal).toEqual(subround.tileset.length);
   });
 
@@ -21,19 +21,19 @@ describe("Subround logic", () => {
 
   it("increments the size of the player to act's hand after drawing a tile", () => {
     const subround = new Subround();
-    const handSizeBeforeDraw = subround.seats[subround.playerToAct].hand.concealed.length;
+    const handSizeBeforeDraw = subround.seats[subround.playerToAct].hand.loose.length;
     subround.draw();
     expect(
-      subround.seatToAct().hand.concealed
+      subround.seatToAct().hand.loose
     ).toHaveLength(handSizeBeforeDraw + 1);
   });
 
   it("decrements the size of the player to act's hand after discarding", () => {
     const subround = new Subround();
-    const handSizeBeforeDiscard = subround.seatToAct().hand.concealed.length;
+    const handSizeBeforeDiscard = subround.seatToAct().hand.loose.length;
     subround.discard(0);
     expect(
-      subround.seatToAct().hand.concealed
+      subround.seatToAct().hand.loose
     ).toHaveLength(handSizeBeforeDiscard - 1);
   });
 

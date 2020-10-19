@@ -11,7 +11,7 @@ const BoardSeat: React.FunctionComponent<{
     <div>
       {props.player.name}
       {props.seat.discardPile.map(tile => <AsciiTile tile={tile} />)}
-      {props.seat.hand.concealed.map(() => 'X')}
+      {props.seat.hand.loose.map(() => 'X')}
     </div>
   );
 };

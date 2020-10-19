@@ -1,48 +1,8 @@
-import {Tile, generateTileset, Rank, Suit, isSimple} from "./tile";
+import {Tile, generateTileset, Rank, isSimple} from "./tile";
+import { Hand, Sequence, Triple } from './hand';
 
 class EmptyWall extends Error {};
 class Impossibility extends Error {};
-
-type Meld = Sequence | Quad | Triple | Pair | Tile;
-
-class Sequence {
-  high: Rank;
-  suit: Suit;
-
-  constructor(high: Rank, suit: Suit) {
-    this.high = high;
-    this.suit = suit;
-  }
-}
-
-class Quad {
-  tile: Tile;
-
-  constructor(tile: Tile) {
-    this.tile = tile;
-  }
-}
-
-class Triple {
-  tile: Tile;
-
-  constructor(tile: Tile) {
-    this.tile = tile;
-  }
-}
-
-class Pair {
-  tile: Tile;
-
-  constructor(tile: Tile) {
-    this.tile = tile;
-  }
-}
-
-export interface Hand {
-  concealed: Tile[];
-  exposed: Meld[];
-}
 
 export type DiscardPile = Tile[];
 
@@ -64,20 +24,24 @@ class Subround {
     const tiles = Array.from(this.tileset);
     this.shuffle(tiles);
     const hand1 = {
-      concealed: tiles.splice(0, 13),
-      exposed: [],
+      loose: tiles.splice(0, 13),
+      concealedMelds: [],
+      exposedMelds: [],
     }
     const hand2 = {
-      concealed: tiles.splice(0, 13),
-      exposed: [],
+      loose: tiles.splice(0, 13),
+      concealedMelds: [],
+      exposedMelds: [],
     }
     const hand3 = {
-      concealed: tiles.splice(0, 13),
-      exposed: [],
+      loose: tiles.splice(0, 13),
+      concealedMelds: [],
+      exposedMelds: [],
     }
     const hand4 = {
-      concealed: tiles.splice(0, 13),
-      exposed: [],
+      loose: tiles.splice(0, 13),
+      concealedMelds: [],
+      exposedMelds: [],
     }
     this.playerToAct = 0;
     this.seats = [
@@ -107,12 +71,12 @@ class Subround {
     }
     const drawnTile = this.wall[0];
     this.wall.shift();
-    this.seatToAct().hand.concealed.push(drawnTile);
+    this.seatToAct().hand.loose.push(drawnTile);
   };
 
   discard = (idx: number) => {
-    const tileToDiscard = this.seatToAct().hand.concealed[idx];
-    this.seatToAct().hand.concealed.splice(idx, 1);
+    const tileToDiscard = this.seatToAct().hand.loose[idx];
+    this.seatToAct().hand.loose.splice(idx, 1);
     this.seatToAct().discardPile.push(tileToDiscard);
   }
 
@@ -121,50 +85,63 @@ class Subround {
   };
 
   claimSequence = (claimant: SeatNumber, highRank: Rank) => {
-    const lastDiscard = this.seatToAct().discardPile.pop();
+    const lastDiscardTile = this.seatToAct().discardPile.reverse()[0];
+    const lastDiscard = lastDiscardTile.value;
     this.playerToAct = claimant;
     if (!lastDiscard || !isSimple(lastDiscard)) {
       throw new Impossibility();
     }
+    lastDiscardTile.claimed = true;
     const suit = lastDiscard.suit;
-    if (lastDiscard.rank === highRank) {
-      const idxFirstMatch = this.seatToAct().hand.concealed.indexOf(
-        { rank: highRank - 1 as Rank, suit }
+    const rank = lastDiscard.rank;
+    if (rank === highRank) {
+      const idxFirstMatch = this.seatToAct().hand.loose.findIndex(
+        tile => tile.value === { rank: highRank - 1 as Rank, suit }
       );
-      this.seatToAct().hand.concealed.splice(idxFirstMatch, 1);
-      const idxSecondMatch = this.seatToAct().hand.concealed.indexOf(
-        { rank: highRank - 2 as Rank, suit }
+      this.seatToAct().hand.loose.splice(idxFirstMatch, 1);
+      const idxSecondMatch = this.seatToAct().hand.loose.findIndex(
+        tile => tile.value === { rank: highRank - 2 as Rank, suit }
       );
-      this.seatToAct().hand.concealed.splice(idxSecondMatch, 1);
-    } else if (lastDiscard.rank === highRank - 1) {
-      const idxFirstMatch = this.seatToAct().hand.concealed.indexOf(lastDiscard);
-      this.seatToAct().hand.concealed.splice(idxFirstMatch, 1);
-      const idxSecondMatch = this.seatToAct().hand.concealed.indexOf(
-        { rank: highRank - 2 as Rank, suit }
+      this.seatToAct().hand.loose.splice(idxSecondMatch, 1);
+    } else if (rank === highRank - 1) {
+      const idxFirstMatch = this.seatToAct().hand.loose.findIndex(
+        tile => tile.value === lastDiscard
       );
-      this.seatToAct().hand.concealed.splice(idxSecondMatch, 1);
+      this.seatToAct().hand.loose.splice(idxFirstMatch, 1);
+      const idxSecondMatch = this.seatToAct().hand.loose.findIndex(
+        tile => tile.value === { rank: highRank - 2 as Rank, suit }
+      );
+      this.seatToAct().hand.loose.splice(idxSecondMatch, 1);
     } else {
-      const idxFirstMatch = this.seatToAct().hand.concealed.indexOf(lastDiscard);
-      this.seatToAct().hand.concealed.splice(idxFirstMatch, 1);
-      const idxSecondMatch = this.seatToAct().hand.concealed.indexOf(
-        { rank: highRank - 1 as Rank, suit }
+      const idxFirstMatch = this.seatToAct().hand.loose.findIndex(
+        tile => tile.value === lastDiscard
       );
-      this.seatToAct().hand.concealed.splice(idxSecondMatch, 1);
+      this.seatToAct().hand.loose.splice(idxFirstMatch, 1);
+      const idxSecondMatch = this.seatToAct().hand.loose.findIndex(
+        tile => tile.value === { rank: highRank - 1 as Rank, suit }
+      );
+      this.seatToAct().hand.loose.splice(idxSecondMatch, 1);
     }
-    this.seatToAct().hand.exposed.push(new Sequence(highRank, suit));
+    this.seatToAct().hand.exposedMelds.push(new Sequence(highRank, suit));
   }
 
   claimTriple = (claimant: SeatNumber) => {
-    const lastDiscard = this.seatToAct().discardPile.pop();
+    const lastDiscardTile = this.seatToAct().discardPile.reverse()[0];
+    const lastDiscard = lastDiscardTile.value
     if (!lastDiscard) {
       throw new Impossibility();
     }
+    lastDiscardTile.claimed = true;
     this.playerToAct = claimant;
-    const idxFirstMatch = this.seatToAct().hand.concealed.indexOf(lastDiscard);
-    this.seatToAct().hand.concealed.splice(idxFirstMatch, 1);
-    const idxSecondMatch = this.seatToAct().hand.concealed.indexOf(lastDiscard);
-    this.seatToAct().hand.concealed.splice(idxSecondMatch, 1);
-    this.seatToAct().hand.exposed.push(new Triple(lastDiscard));
+    const idxFirstMatch = this.seatToAct().hand.loose.findIndex(
+      tile => tile.value === lastDiscard
+    );
+    this.seatToAct().hand.loose.splice(idxFirstMatch, 1);
+    const idxSecondMatch = this.seatToAct().hand.loose.findIndex(
+      tile => tile.value === lastDiscard
+    );
+    this.seatToAct().hand.loose.splice(idxSecondMatch, 1);
+    this.seatToAct().hand.exposedMelds.push(new Triple(lastDiscard));
   }
 
   seatToAct = (): Seat => {

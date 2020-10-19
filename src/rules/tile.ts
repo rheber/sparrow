@@ -1,4 +1,9 @@
-export type Tile = Simple | Honor | Bonus;
+export interface Tile {
+  value: TileValue;
+  claimed: boolean;
+}
+
+export type TileValue = Simple | Honor | Bonus;
 
 interface Simple {
   rank: Rank;
@@ -25,11 +30,11 @@ type Flower = 'plum' | 'orchid' | 'chrysanthemum' | 'bamboo';
 
 type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 
-const isSimple = (tile: Tile): tile is Simple => {
+const isSimple = (tile: TileValue): tile is Simple => {
   return (tile as Simple).suit !== undefined;
 };
 
-const tileName = (tile: Tile): string => {
+const tileName = (tile: TileValue): string => {
   if (isSimple(tile)) {
     return `${tile.suit} ${tile.rank}`;
   }

@@ -7,7 +7,7 @@ const AsciiTile: React.FunctionComponent<{
 
   return (
     <div>
-      {tileName(props.tile)}
+      {tileName(props.tile.value)}
     </div>
   );
 };
