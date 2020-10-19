@@ -114,4 +114,4 @@ const generateTileset = (options: TilesetOptions): Tile[] => {
   return standardTileset;
 }
 
-export { generateTileset, tileName };
+export { generateTileset, isSimple, tileName };

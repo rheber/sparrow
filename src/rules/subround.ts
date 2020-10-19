@@ -1,4 +1,4 @@
-import {Tile, generateTileset, Rank, Suit} from "./tile";
+import {Tile, generateTileset, Rank, Suit, isSimple} from "./tile";
 
 class EmptyWall extends Error {};
 class Impossibility extends Error {};
@@ -119,6 +119,40 @@ class Subround {
   noClaim = () => {
     this.playerToAct = ((this.playerToAct + 1) % 4) as SeatNumber;
   };
+
+  claimSequence = (claimant: SeatNumber, highRank: Rank) => {
+    const lastDiscard = this.seatToAct().discardPile.pop();
+    this.playerToAct = claimant;
+    if (!lastDiscard || !isSimple(lastDiscard)) {
+      throw new Impossibility();
+    }
+    const suit = lastDiscard.suit;
+    if (lastDiscard.rank === highRank) {
+      const idxFirstMatch = this.seatToAct().hand.concealed.indexOf(
+        { rank: highRank - 1 as Rank, suit }
+      );
+      this.seatToAct().hand.concealed.splice(idxFirstMatch, 1);
+      const idxSecondMatch = this.seatToAct().hand.concealed.indexOf(
+        { rank: highRank - 2 as Rank, suit }
+      );
+      this.seatToAct().hand.concealed.splice(idxSecondMatch, 1);
+    } else if (lastDiscard.rank === highRank - 1) {
+      const idxFirstMatch = this.seatToAct().hand.concealed.indexOf(lastDiscard);
+      this.seatToAct().hand.concealed.splice(idxFirstMatch, 1);
+      const idxSecondMatch = this.seatToAct().hand.concealed.indexOf(
+        { rank: highRank - 2 as Rank, suit }
+      );
+      this.seatToAct().hand.concealed.splice(idxSecondMatch, 1);
+    } else {
+      const idxFirstMatch = this.seatToAct().hand.concealed.indexOf(lastDiscard);
+      this.seatToAct().hand.concealed.splice(idxFirstMatch, 1);
+      const idxSecondMatch = this.seatToAct().hand.concealed.indexOf(
+        { rank: highRank - 1 as Rank, suit }
+      );
+      this.seatToAct().hand.concealed.splice(idxSecondMatch, 1);
+    }
+    this.seatToAct().hand.exposed.push(new Sequence(highRank, suit));
+  }
 
   claimTriple = (claimant: SeatNumber) => {
     const lastDiscard = this.seatToAct().discardPile.pop();
