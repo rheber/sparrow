@@ -1,5 +1,6 @@
 import {Tile, generateTileset, Rank, isSimple} from "./tile";
 import { Hand, Sequence, Triple } from './hand';
+import { deleteFirstWhere } from '../util/array';
 
 class EmptyWall extends Error {};
 class Impossibility extends Error {};
@@ -95,32 +96,32 @@ class Subround {
     const suit = lastDiscard.suit;
     const rank = lastDiscard.rank;
     if (rank === highRank) {
-      const idxFirstMatch = this.seatToAct().hand.loose.findIndex(
+      deleteFirstWhere(
+        this.seatToAct().hand.loose,
         tile => tile.value === { rank: highRank - 1 as Rank, suit }
       );
-      this.seatToAct().hand.loose.splice(idxFirstMatch, 1);
-      const idxSecondMatch = this.seatToAct().hand.loose.findIndex(
+      deleteFirstWhere(
+        this.seatToAct().hand.loose,
         tile => tile.value === { rank: highRank - 2 as Rank, suit }
       );
-      this.seatToAct().hand.loose.splice(idxSecondMatch, 1);
     } else if (rank === highRank - 1) {
-      const idxFirstMatch = this.seatToAct().hand.loose.findIndex(
+      deleteFirstWhere(
+        this.seatToAct().hand.loose,
         tile => tile.value === lastDiscard
       );
-      this.seatToAct().hand.loose.splice(idxFirstMatch, 1);
-      const idxSecondMatch = this.seatToAct().hand.loose.findIndex(
+      deleteFirstWhere(
+        this.seatToAct().hand.loose,
         tile => tile.value === { rank: highRank - 2 as Rank, suit }
       );
-      this.seatToAct().hand.loose.splice(idxSecondMatch, 1);
     } else {
-      const idxFirstMatch = this.seatToAct().hand.loose.findIndex(
+      deleteFirstWhere(
+        this.seatToAct().hand.loose,
         tile => tile.value === lastDiscard
       );
-      this.seatToAct().hand.loose.splice(idxFirstMatch, 1);
-      const idxSecondMatch = this.seatToAct().hand.loose.findIndex(
+      deleteFirstWhere(
+        this.seatToAct().hand.loose,
         tile => tile.value === { rank: highRank - 1 as Rank, suit }
       );
-      this.seatToAct().hand.loose.splice(idxSecondMatch, 1);
     }
     this.seatToAct().hand.exposedMelds.push(new Sequence(highRank, suit));
   }
@@ -133,14 +134,14 @@ class Subround {
     }
     lastDiscardTile.claimed = true;
     this.playerToAct = claimant;
-    const idxFirstMatch = this.seatToAct().hand.loose.findIndex(
+    deleteFirstWhere(
+      this.seatToAct().hand.loose,
       tile => tile.value === lastDiscard
     );
-    this.seatToAct().hand.loose.splice(idxFirstMatch, 1);
-    const idxSecondMatch = this.seatToAct().hand.loose.findIndex(
+    deleteFirstWhere(
+      this.seatToAct().hand.loose,
       tile => tile.value === lastDiscard
     );
-    this.seatToAct().hand.loose.splice(idxSecondMatch, 1);
     this.seatToAct().hand.exposedMelds.push(new Triple(lastDiscard));
   }
 
@@ -149,7 +150,7 @@ class Subround {
   };
 
   // Fisher-Yates in-place. https://stackoverflow.com/a/6274381
-  private shuffle = (a: any[]) => {
+  private shuffle = <T>(a: T[]) => {
     let j: number;
     let x: any;
     let i: number;
